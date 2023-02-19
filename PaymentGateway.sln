@@ -5,7 +5,11 @@ VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentGatewayAPI", "PaymentGatewayAPI\PaymentGatewayAPI.csproj", "{DA9B14CB-DB57-4D1E-AC7D-6E303918C857}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentsProcessor", "PaymentsProcessor\PaymentsProcessor.csproj", "{CEF74936-3B04-4C29-AA2B-E24DE69BE61C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentsProcessor", "PaymentsProcessor\PaymentsProcessor.csproj", "{CEF74936-3B04-4C29-AA2B-E24DE69BE61C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentGateway.Data", "PaymentGateway.Data\PaymentGateway.Data.csproj", "{74C90463-A9C1-4CA2-97BA-9EA8FA61C2E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankSimulator", "BankSimulator\BankSimulator.csproj", "{714445D1-AFA1-4FB7-82E1-6758B55B56C5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{CEF74936-3B04-4C29-AA2B-E24DE69BE61C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEF74936-3B04-4C29-AA2B-E24DE69BE61C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEF74936-3B04-4C29-AA2B-E24DE69BE61C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74C90463-A9C1-4CA2-97BA-9EA8FA61C2E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74C90463-A9C1-4CA2-97BA-9EA8FA61C2E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74C90463-A9C1-4CA2-97BA-9EA8FA61C2E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74C90463-A9C1-4CA2-97BA-9EA8FA61C2E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{714445D1-AFA1-4FB7-82E1-6758B55B56C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{714445D1-AFA1-4FB7-82E1-6758B55B56C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{714445D1-AFA1-4FB7-82E1-6758B55B56C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{714445D1-AFA1-4FB7-82E1-6758B55B56C5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

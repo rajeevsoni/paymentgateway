@@ -1,4 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using PaymentGateway.Data;
+using PaymentGateway.Data.Models;
+using PaymentGatewayAPI.Services;
 
 namespace PaymentGatewayAPI.Controllers
 {
@@ -6,28 +9,43 @@ namespace PaymentGatewayAPI.Controllers
     [Route("[controller]")]
     public class PaymentsController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
-
+        private readonly IPaymentGatewayService _paymentGatewayService;
         private readonly ILogger<PaymentsController> _logger;
 
-        public PaymentsController(ILogger<PaymentsController> logger)
+        public PaymentsController(IPaymentGatewayService paymentGatewayService, ILogger<PaymentsController> logger)
         {
+            _paymentGatewayService = paymentGatewayService;
             _logger = logger;
         }
 
-        [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] PaymentRequest paymentRequest)
         {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            _logger.LogInformation($"Entering {nameof(PaymentsController)} - {nameof(Post)}");
+            if (!ModelState.IsValid)
             {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+                return BadRequest(ModelState);
+            }
+
+            PaymentResponse paymentResponse = await _paymentGatewayService.SubmitPaymentRequest(paymentRequest);
+            return Accepted(paymentResponse);
+        }
+
+        [HttpGet("{paymentId}")]
+        public async Task<IActionResult> Get(string paymentId)
+        {
+            _logger.LogInformation($"Entering {nameof(PaymentsController)} - {nameof(Get)} with {paymentId}");
+
+            Guid.TryParse(paymentId, out Guid paymentIdentifier);
+            PaymentDetails paymentDetails = await _paymentGatewayService.GetPaymentDetails(paymentIdentifier);
+            if (paymentDetails == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(paymentDetails);
+            }
         }
     }
 }
