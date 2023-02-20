@@ -11,7 +11,7 @@ namespace PaymentGateway.Data.Models
         public int ExpiryMonth { get; set; }
 
         [Required]
-        public int ExpiryDate { get; set; }
+        public int ExpiryYear { get; set; }
 
         [Required]
         public string Name { get; set; }

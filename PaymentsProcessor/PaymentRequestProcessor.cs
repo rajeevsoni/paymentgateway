@@ -1,14 +1,13 @@
-using System;
-using System.Threading.Tasks;
 using BankSimulator;
 using BankSimulator.Models;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PaymentGateway.Data;
 using PaymentGateway.Data.Repository;
+using System;
+using System.Threading.Tasks;
 
 namespace PaymentsProcessor
 {
@@ -37,11 +36,21 @@ namespace PaymentsProcessor
         public async Task Run([QueueTrigger("PaymentRequestQueue", Connection = "PaymentRequestQueueURI")]PaymentRequestQueueItem paymentRequestQueueItem, ILogger log)
         {
             log.LogInformation($"PaymentRequestProcessor completed for paymentId : {paymentRequestQueueItem.PaymentId}");
+
+            PaymentDetails paymentDetails = new PaymentDetails(paymentRequestQueueItem.PaymentId,
+                dummyMerchantId,
+                PaymentStatus.pending,
+                paymentRequestQueueItem.PaymentRequest.Amount,
+                paymentRequestQueueItem.PaymentRequest.CurrencyCode);
+
+            await _paymentDetailsRepository.AddpaymentDetails(paymentDetails);
+            log.LogInformation($"Payment details added with Pending status for paymentId : {paymentRequestQueueItem.PaymentId}");
+
             TransactionRequest transactionRequest = new TransactionRequest(paymentRequestQueueItem.PaymentId,
                 dummyMerchantId,
                 paymentRequestQueueItem.PaymentRequest.CardNumber,
                 paymentRequestQueueItem.PaymentRequest.ExpiryMonth,
-                paymentRequestQueueItem.PaymentRequest.ExpiryDate,
+                paymentRequestQueueItem.PaymentRequest.ExpiryYear,
                 paymentRequestQueueItem.PaymentRequest.Name,
                 paymentRequestQueueItem.PaymentRequest.Amount,
                 paymentRequestQueueItem.PaymentRequest.CurrencyCode,
@@ -51,14 +60,11 @@ namespace PaymentsProcessor
             TransactionResponse transactionResponse = await _bankService.ProcessTransaction(transactionRequest);
             log.LogInformation($"Bank request for transaction ID {transactionRequest.TransactionId} Completed");
 
-            PaymentDetails paymentDetails = new PaymentDetails(transactionResponse.TransactionId,
-                dummyMerchantId,
-                GetPaymentStatus(transactionResponse.TransactionStatus), 
-                transactionRequest.Amount, 
-                transactionRequest.CurrencyCode);
+            paymentDetails.UpdatePaymentStatus(GetPaymentStatus(transactionResponse.TransactionStatus));
+            await _paymentDetailsRepository.UpdatepaymentDetails(paymentDetails);
+            log.LogInformation($"Payment status set to {paymentDetails.PaymentStatus} for payment ID {paymentDetails.PaymentId}");
 
-            await _paymentDetailsRepository.AddpaymentDetails(paymentDetails);
-            log.LogInformation($"PaymentDetails for ID {paymentDetails.PaymentId} successfully persisted on PaymentGateway");
+            log.LogInformation($"Processing completed for payment ID {paymentDetails.PaymentId}");
         }
 
         private PaymentStatus GetPaymentStatus(TransactionStatus transactionStatus)

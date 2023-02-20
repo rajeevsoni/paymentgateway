@@ -12,7 +12,7 @@ namespace PaymentGatewayAPI.Services
         private readonly IPaymentDetailsRepository _paymentDetailsRepository; 
         private readonly ILogger<PaymentGatewayService> _logger;
 
-        PaymentGatewayService(QueueClient queueClient, IPaymentDetailsRepository paymentDetailsRepository, ILogger<PaymentGatewayService> logger)
+        public PaymentGatewayService(QueueClient queueClient, IPaymentDetailsRepository paymentDetailsRepository, ILogger<PaymentGatewayService> logger)
         {
             _queueClient = queueClient;
             _paymentDetailsRepository= paymentDetailsRepository;

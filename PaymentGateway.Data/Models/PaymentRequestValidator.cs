@@ -16,7 +16,7 @@ namespace PaymentGateway.Data.Models
             RuleFor(r => r.ExpiryMonth)
                 .NotEmpty()
                 .InclusiveBetween(1, 12);
-            RuleFor(r => r.ExpiryDate)
+            RuleFor(r => r.ExpiryYear)
                 .NotEmpty()
                 .GreaterThanOrEqualTo(currentYear);
             RuleFor(r => r.Name)

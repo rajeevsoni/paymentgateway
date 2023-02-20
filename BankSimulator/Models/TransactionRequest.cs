@@ -10,7 +10,7 @@
 
         public int ExpiryMonth { get; }
 
-        public int ExpiryDate { get; }
+        public int ExpiryYear { get; }
 
         public string Name { get; }
 
@@ -36,7 +36,7 @@
             MerchantId = merchantId;
             CardNumber = cardNumber;
             ExpiryMonth = expiryMonth;
-            ExpiryDate = expiryDate;
+            ExpiryYear = expiryDate;
             Name = name;
             Amount = amount;
             CurrencyCode = currencyCode;
